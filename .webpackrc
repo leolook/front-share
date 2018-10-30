@@ -1,2 +1,19 @@
 {
+    "extraBabelPlugins": [
+        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+   ],
+   "theme": {
+    "@primary-color": "#dc6aac",
+    "@link-color": "#dc6aac",
+    "@border-radius-base": "2px",
+    "@font-size-base": "16px",
+    "@line-height-base": "1.2"
+  },
+  "proxy": {
+    "/tool": {
+      "target": "http://leolook.cn:3000",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
+    }
+  }
 }
