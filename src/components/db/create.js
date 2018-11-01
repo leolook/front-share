@@ -7,20 +7,20 @@ const FormItem = Form.Item;
 const CollectionCreateForm = Form.create()(
   class extends React.Component {
     render() {
-      const { visible, onCancel, onCreate, form } = this.props;
+      const { visible, onCancel, onCreate, form, data } = this.props;
       const { getFieldDecorator } = form;
 
       return (
         <Modal
           visible={visible}
-          title="新建"
-          okText="保存"
+          title={data.title}
+          okText="确认"
           onCancel={onCancel}
-          onOk={onCreate}
+          onOk={() => onCreate(data.key)}
         >
           <Form>
             <FormItem label="名称">
-              {getFieldDecorator("title", {
+              {getFieldDecorator("name", {
                 rules: [{ required: true, message: "请输入名称" }]
               })(<Input />)}
             </FormItem>

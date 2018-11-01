@@ -1,4 +1,4 @@
-import { Row, Button, Table } from "antd";
+import { Row, Button, Table, Popconfirm, Col } from "antd";
 import CollectionCreateForm from "./create";
 import React from "react";
 import { connect } from "dva";
@@ -9,23 +9,31 @@ class List extends React.Component {
     loading: false,
     list: [
       {
+        key: 1,
         name: "db1",
         ip: "192.168.1.230",
         port: "2030",
         userName: "root"
       }
-    ]
+    ],
+    modal: {
+      title: "新建"
+    }
   };
 
   showModal = () => {
-    this.setState({ visible: true });
+    const form = this.formRef.props.form;
+    form.resetFields();
+    this.setState({ visible: true, modal: { title: "新建", key: 0 } });
   };
 
   handleCancel = () => {
     this.setState({ visible: false });
   };
 
-  handleCreate = () => {
+  handleCreate = key => {
+    console.log(key);
+
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       if (err) {
@@ -42,6 +50,7 @@ class List extends React.Component {
           if (res) {
             console.log("res", res);
             let tmp = this.state.list;
+            res.key = tmp.length + 1;
             tmp.push(res);
             this.setState({ list: tmp });
           }
@@ -55,6 +64,15 @@ class List extends React.Component {
 
   saveFormRef = formRef => {
     this.formRef = formRef;
+  };
+
+  onDelete = id => {};
+
+  onEdit = () => {
+    let v = this.state.list;
+    const form = this.formRef.props.form;
+    form.setFieldsValue(v[0]);
+    this.setState({ visible: true, modal: { title: "编辑", key: 1 } });
   };
 
   render() {
@@ -78,7 +96,25 @@ class List extends React.Component {
       {
         title: "操作",
         key: "action",
-        render: () => <a href="javascript:;">删除</a>
+        render: (text, record) => {
+          return (
+            <Row gutter={8}>
+              <Col span={5}>
+                <Button type="primary" onClick={this.onEdit}>
+                  编辑
+                </Button>
+              </Col>
+              <Col span={5}>
+                <Popconfirm
+                  title="确认删除?"
+                  onConfirm={() => this.onDelete(record.key)}
+                >
+                  <Button type="primary">删除</Button>
+                </Popconfirm>
+              </Col>
+            </Row>
+          );
+        }
       }
     ];
 
@@ -93,6 +129,7 @@ class List extends React.Component {
             visible={this.state.visible}
             onCancel={this.handleCancel}
             onCreate={this.handleCreate}
+            data={this.state.modal}
           />
         </Row>
         <Row style={{ marginTop: "10px" }}>
