@@ -1,19 +1,25 @@
-import React from 'react';
-import { Router, Route, Switch } from 'dva/router';
-import DbUtil from './components/DbUtil';
-import Products from './routes/Products'
-import Test from './components/Test'
+import React from "react";
+import { Router, Route, Switch } from "dva/router";
+import DbUtil from "./components/DbUtil";
+import Main from "./components/main";
+import List from "./components/db/list";
 
 import { LocaleProvider } from "antd";
 import zh_CN from "antd/lib/locale-provider/zh_CN";
 
 function RouterConfig({ history }) {
+  const Inbox = ({ match }) => (
+    <Main>
+      <Route path={`${match.url}/list`} component={List} />
+      <Route path={`${match.url}/db`} component={DbUtil} />
+    </Main>
+  );
+
   return (
     <LocaleProvider locale={zh_CN}>
       <Router history={history}>
         <Switch>
-          <Route path="/main" component={Products} />
-          <Route path="/db" component={DbUtil} />
+          <Route path="/main" component={Inbox} />
         </Switch>
       </Router>
     </LocaleProvider>

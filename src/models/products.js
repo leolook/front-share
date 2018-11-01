@@ -1,7 +1,7 @@
 import * as ProductService from "../services/products"
 
 export default {
-    namespace: 'products',
+    namespace: 'test',
     state: {
       list:[{name:'test1',id:1},
       {name:'test2',id:2}]
