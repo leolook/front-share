@@ -1,101 +1,96 @@
-import { Row, Button, Select, Form, Col } from "antd";
+import { Row, Button, Select, Form, Col, Input } from "antd";
 import React from "react";
+import { connect } from "dva";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-export default class App extends React.Component {
+class DbUtil extends React.Component {
   state = {
     visible: false,
-    db: [
-      {
-        value: 1,
-        name: 1
-      },
-      {
-        value: 2,
-        name: 2
-      },
-      {
-        value: 3,
-        name: 3
-      }
-    ],
+    db: [],
     table: [
       {
         value: 1,
         name: 1
-      },
-      {
-        value: 2,
-        name: 2
-      },
-      {
-        value: 3,
-        name: 3
       }
-    ]
+    ],
+    connect: {
+      disabled: true,
+      loading: false
+    },
+    run: {
+      disabled: true,
+      loading: false
+    }
   };
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
-
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-
-  handleCreate = () => {
-    const form = this.formRef.props.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
+  componentDidMount = () => {
+    this.setState({ connect: { loading: true } });
+    this.props.dispatch({
+      type: "db/allName",
+      payload: {},
+      callback: res => {
+        this.setState({
+          connect: { loading: false, disabled: true }
+        });
+        console.log(res);
+        if (res) {
+          this.setState({ db: res });
+        }
       }
-
-      console.log("Received values of form: ", values);
-      form.resetFields();
-      this.setState({ visible: false });
     });
   };
 
-  saveFormRef = formRef => {
-    this.formRef = formRef;
-  };
-
   render() {
-    function handleChange(value) {
-      console.log(`selected ${value}`);
-    }
+    // function handleChange(value) {
+    //   console.log(`selected ${value}`);
+    // }
 
-    const formTailLayout = {
-      // labelCol: { span: 4 },
-      // wrapperCol: {  offset: 2 },
-    };
+    // const formTailLayout = {
+    //   // labelCol: { span: 4 },
+    //   // wrapperCol: {  offset: 2 },
+    // };
 
     return (
       <Row gutter={8}>
         <Col span={12}>
           <Form style={{ marginLeft: "30px" }}>
-            <FormItem {...formTailLayout}>
-              <Select
-                showSearch
-                style={{ width: 200 }}
-                placeholder="请选择一项"
-                optionFilterProp="children"
-                onChange={handleChange}
-                filterOption={(input, option) =>
-                  option.props.children
-                    .toLowerCase()
-                    .indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                {this.state.db.map(d => (
-                  <Option value={d.value}>{d.name}</Option>
-                ))}
-              </Select>
+            <FormItem>
+              <Col span={8}>
+                <Select
+                  showSearch
+                  style={{ width: 200 }}
+                  placeholder="请选择一项"
+                  optionFilterProp="children"
+                  // onChange={handleChange}
+                  filterOption={(input, option) =>
+                    option.props.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {this.state.db.map(d => (
+                    <Option value={d.key}>{d.name}</Option>
+                  ))}
+                </Select>
+              </Col>
+              <Col span={4}>
+                <Input />
+              </Col>
+              <Col span={8}>
+                <Button
+                  type="primary"
+                  style={{ marginLeft: 10 }}
+                  disabled={this.state.connect.disabled}
+                  loading={this.state.connect.loading}
+                >
+                  连接
+                </Button>
+              </Col>
             </FormItem>
 
-            <FormItem {...formTailLayout}>
+            <FormItem>
               <Select
                 showSearch
                 style={{ width: 200 }}
@@ -113,9 +108,15 @@ export default class App extends React.Component {
               </Select>
             </FormItem>
 
-            <FormItem {...formTailLayout}>
+            <FormItem>
               <Col span={4}>
-                <Button type="primary">运行</Button>
+                <Button
+                  type="primary"
+                  // loading={this.state.btn.run.loading}
+                  disabled={this.state.run.disabled}
+                >
+                  运行
+                </Button>
               </Col>
               <Col span={4}>
                 <Button type="primary">清除</Button>
@@ -131,3 +132,10 @@ export default class App extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    db: state.db
+  };
+};
+export default connect(mapStateToProps)(DbUtil);

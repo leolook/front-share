@@ -1,4 +1,5 @@
-import fetch from 'dva/fetch';
+import fetch from "dva/fetch";
+import { message } from "antd";
 
 function parseJSON(response) {
   return response.json();
@@ -25,6 +26,12 @@ export default function request(url, options) {
   return fetch(url, options)
     .then(checkStatus)
     .then(parseJSON)
-    .then(data => ({ data }))
+    .then(data => {
+      if (data.code !== 0) {
+        message.error(data.msg);
+        return null;
+      }
+      return data.data;
+    })
     .catch(err => ({ err }));
 }

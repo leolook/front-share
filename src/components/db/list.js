@@ -3,22 +3,26 @@ import CollectionCreateForm from "./create";
 import React from "react";
 import { connect } from "dva";
 
+const PageSize = 5;
 class List extends React.Component {
   state = {
     visible: false,
     loading: false,
-    list: [
-      {
-        key: 1,
-        name: "db1",
-        ip: "192.168.1.230",
-        port: "2030",
-        userName: "root"
-      }
-    ],
+    list: [],
     modal: {
       title: "新建"
+    },
+    pagination: {
+      onChange: (pageNo, pageSize) => {
+        console.log(pageNo, pageSize);
+        this.handlePage(pageNo);
+      }
     }
+  };
+
+  //初始化列表数据
+  componentDidMount = () => {
+    this.handlePage(1);
   };
 
   showModal = () => {
@@ -31,34 +35,60 @@ class List extends React.Component {
     this.setState({ visible: false });
   };
 
-  handleCreate = key => {
-    console.log(key);
+  //处理分页数据
+  handlePage = pageNo => {
+    console.log("pageNo", pageNo);
+    this.setState({ loading: true });
+    this.props.dispatch({
+      type: "db/page",
+      payload: { pageNo: pageNo, pageSize: PageSize },
+      callback: res => {
+        this.setState({ loading: false });
+        if (res) {
+          this.setState({
+            list: res.list,
+            pagination: {
+              current: res.page.current,
+              pageSize: res.page.pageSize,
+              total: res.page.total
+            }
+          });
+        }
+      }
+    });
+  };
 
+  //创建或者编辑
+  handleCreate = key => {
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      console.log("Received values of form: ", values);
 
+      key = parseInt(key, 10);
+      if (key > 0) {
+        values.key = key;
+      }
+      console.log("Received values of form: ", values);
       this.setState({ loading: true });
       this.props.dispatch({
-        type: "db/create",
+        type: "db/createOrModify",
         payload: values,
         callback: res => {
           this.setState({ loading: false });
-          if (res) {
-            console.log("res", res);
-            let tmp = this.state.list;
-            res.key = tmp.length + 1;
-            tmp.push(res);
-            this.setState({ list: tmp });
+          if (res && res === true) {
+            form.resetFields();
+            this.setState({ visible: false });
+
+            if (key > 0) {
+              this.handlePage(this.state.pagination.current);
+            } else {
+              this.handlePage(1);
+            }
           }
         }
       });
-
-      form.resetFields();
-      this.setState({ visible: false });
     });
   };
 
@@ -68,11 +98,16 @@ class List extends React.Component {
 
   onDelete = id => {};
 
-  onEdit = () => {
+  onEdit = key => {
     let v = this.state.list;
     const form = this.formRef.props.form;
-    form.setFieldsValue(v[0]);
-    this.setState({ visible: true, modal: { title: "编辑", key: 1 } });
+    for (var i = 0; i < v.length; i++) {
+      if (v[i].key === key) {
+        form.setFieldsValue(v[i]);
+        break;
+      }
+    }
+    this.setState({ visible: true, modal: { title: "编辑", key: key } });
   };
 
   render() {
@@ -100,7 +135,7 @@ class List extends React.Component {
           return (
             <Row gutter={8}>
               <Col span={5}>
-                <Button type="primary" onClick={this.onEdit}>
+                <Button type="primary" onClick={() => this.onEdit(record.key)}>
                   编辑
                 </Button>
               </Col>
@@ -137,6 +172,7 @@ class List extends React.Component {
             columns={columns}
             dataSource={this.state.list}
             loading={this.state.loading}
+            pagination={this.state.pagination}
           />
         </Row>
       </div>

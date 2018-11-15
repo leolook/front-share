@@ -11,7 +11,7 @@
   },
   "proxy": {
     "/tool": {
-      "target": "http://leolook.cn:3000",
+      "target": "http://127.0.0.1:2030",
       "changeOrigin": true,
       "pathRewrite": { "^/api" : "" }
     }
