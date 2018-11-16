@@ -31,7 +31,7 @@ export default function request(url, options) {
         message.error(data.msg);
         return null;
       }
-      return data.data;
+      return data;
     })
     .catch(err => ({ err }));
 }

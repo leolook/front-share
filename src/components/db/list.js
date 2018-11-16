@@ -77,10 +77,9 @@ class List extends React.Component {
         payload: values,
         callback: res => {
           this.setState({ loading: false });
-          if (res && res === true) {
+          if (res) {
             form.resetFields();
             this.setState({ visible: false });
-
             if (key > 0) {
               this.handlePage(this.state.pagination.current);
             } else {

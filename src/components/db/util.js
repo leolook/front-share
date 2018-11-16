@@ -1,9 +1,12 @@
-import { Row, Button, Select, Form, Col, Input } from "antd";
+import { Row, Button, Select, Form, Col, Input, Card } from "antd";
 import React from "react";
 import { connect } from "dva";
+import { node } from "prop-types";
 
 const Option = Select.Option;
 const FormItem = Form.Item;
+
+let tableName = "";
 
 const UtilFrom = Form.create()(
   class extends React.Component {
@@ -19,7 +22,11 @@ const UtilFrom = Form.create()(
         disabled: true
       },
       db: [],
-      table: []
+      table: {
+        key: "",
+        model: []
+      },
+      content: "demo"
     };
 
     componentDidMount = () => {
@@ -60,9 +67,7 @@ const UtilFrom = Form.create()(
             });
             if (res) {
               this.setState({
-                table: res,
-                run: { disabled: false },
-                clear: { disabled: false }
+                table: res
               });
             }
           }
@@ -71,13 +76,41 @@ const UtilFrom = Form.create()(
     };
 
     //运行
-    handelRun = () => {};
+    handelRun = () => {
+      let values = {
+        key: this.state.table.key,
+        name: tableName
+      };
+      this.setState({
+        run: { loading: true, disabled: true }
+      });
+      this.props.dispatch({
+        type: "db/tableModel",
+        payload: values,
+        callback: res => {
+          this.setState({
+            run: { loading: false, disabled: false }
+          });
+          if (res) {
+            this.setState({ content: res });
+          }
+        }
+      });
+    };
 
     //清除
-    handelClear = () => {};
+    handelClear = () => {
+      this.setState({ content: "" });
+    };
 
     //表
-    handelChange = () => {};
+    handelChange = (value, option) => {
+      tableName = value;
+      this.setState({
+        run: { disabled: false },
+        clear: { disabled: false }
+      });
+    };
     render() {
       const { getFieldDecorator } = this.props.form;
       return (
@@ -118,7 +151,7 @@ const UtilFrom = Form.create()(
             <Form>
               <FormItem>
                 <Select placeholder="请选择一项" onChange={this.handelChange}>
-                  {this.state.table.map(d => (
+                  {this.state.table.model.map(d => (
                     <Option value={d.name}>{d.name}</Option>
                   ))}
                 </Select>
@@ -142,6 +175,19 @@ const UtilFrom = Form.create()(
                 </Button>
               </FormItem>
             </Form>
+          </Col>
+          <Col span={2} />
+          <Col span={14}>
+            <div style={{ background: "#ECECEC", padding: "30px" }}>
+              <Card title="表模型" bordered={false} style={{ width: "auto" }}>
+                <textarea
+                  style={{ border: "none" }}
+                  rows="15"
+                  cols="70"
+                  value={this.state.content}
+                />
+              </Card>
+            </div>
           </Col>
         </Row>
       );
