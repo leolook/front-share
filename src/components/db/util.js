@@ -1,7 +1,6 @@
 import { Row, Button, Select, Form, Col, Input, Card } from "antd";
 import React from "react";
 import { connect } from "dva";
-import { node } from "prop-types";
 
 const Option = Select.Option;
 const FormItem = Form.Item;
