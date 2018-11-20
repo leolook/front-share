@@ -19,6 +19,7 @@ export default {
       console.log(res);
       if (callback && typeof callback === "function") {
         if (res.code !== 0) {
+          callback(false);
           return;
         }
         callback(true); // 返回结果
@@ -31,11 +32,13 @@ export default {
       console.log(res);
       if (callback && typeof callback === "function") {
         if (res.code !== 0) {
+          callback(false);
           return;
         }
         res = res.data;
         let list = res.list;
         if (list == null) {
+          callback(false);
           return;
         }
         let data = {
@@ -61,6 +64,7 @@ export default {
       console.log(res);
       if (callback && typeof callback === "function") {
         if (res.code !== 0) {
+          callback(false);
           return;
         }
         res = res.data;
@@ -73,6 +77,7 @@ export default {
       console.log(res);
       if (callback && typeof callback === "function") {
         if (res.code !== 0) {
+          callback(false);
           return;
         }
         res = res.data;
@@ -96,6 +101,7 @@ export default {
       console.log(res);
       if (callback && typeof callback === "function") {
         if (res.code !== 0) {
+          callback(false);
           return;
         }
         res = res.data;

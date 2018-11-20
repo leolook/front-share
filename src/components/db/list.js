@@ -43,6 +43,7 @@ class List extends React.Component {
       type: "db/page",
       payload: { pageNo: pageNo, pageSize: PageSize },
       callback: res => {
+        console.log(res);
         this.setState({ loading: false });
         if (res) {
           this.setState({
@@ -76,6 +77,7 @@ class List extends React.Component {
         type: "db/createOrModify",
         payload: values,
         callback: res => {
+          console.log(res);
           this.setState({ loading: false });
           if (res) {
             form.resetFields();

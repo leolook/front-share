@@ -29,7 +29,6 @@ export default function request(url, options) {
     .then(data => {
       if (data.code !== 0) {
         message.error(data.msg);
-        return null;
       }
       return data;
     })
