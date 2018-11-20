@@ -4,6 +4,7 @@ import { connect } from "dva";
 
 const Option = Select.Option;
 const FormItem = Form.Item;
+const { TextArea } = Input;
 
 let tableName = "";
 
@@ -179,12 +180,14 @@ const UtilFrom = Form.create()(
           <Col span={14}>
             <div style={{ background: "#ECECEC", padding: "30px" }}>
               <Card title="表模型" bordered={false} style={{ width: "auto" }}>
-                <textarea
+                <TextArea rows={8} value={this.state.content} />
+
+                {/* <textarea
                   style={{ border: "none" }}
                   rows="15"
                   cols="70"
                   value={this.state.content}
-                />
+                /> */}
               </Card>
             </div>
           </Col>
