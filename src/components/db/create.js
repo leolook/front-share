@@ -35,13 +35,13 @@ const CollectionCreateForm = Form.create()(
               })(<Input />)}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="ip">
+            <FormItem {...formItemLayout} label="ip" help="例如:47.95.96.124">
               {getFieldDecorator("ip", {
                 rules: [{ required: true, message: "请输入ip" }]
               })(<Input />)}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="端口">
+            <FormItem {...formItemLayout} label="端口" help="(1~65535)">
               {getFieldDecorator("port", {
                 rules: [{ required: true, message: "请输入端口号" }]
               })(
