@@ -1,4 +1,4 @@
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, InputNumber } from "antd";
 
 import React from "react";
 
@@ -9,6 +9,16 @@ const CollectionCreateForm = Form.create()(
     render() {
       const { visible, onCancel, onCreate, form, data } = this.props;
       const { getFieldDecorator } = form;
+      const formItemLayout = {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 4 }
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 }
+        }
+      };
 
       return (
         <Modal
@@ -19,31 +29,34 @@ const CollectionCreateForm = Form.create()(
           onOk={() => onCreate(data.key)}
         >
           <Form>
-            <FormItem label="名称">
+            <FormItem {...formItemLayout} label="名称">
               {getFieldDecorator("name", {
                 rules: [{ required: true, message: "请输入名称" }]
               })(<Input />)}
             </FormItem>
 
-            <FormItem label="ip">
+            <FormItem {...formItemLayout} label="ip">
               {getFieldDecorator("ip", {
                 rules: [{ required: true, message: "请输入ip" }]
               })(<Input />)}
             </FormItem>
 
-            <FormItem label="端口">
+            <FormItem {...formItemLayout} label="端口">
               {getFieldDecorator("port", {
                 rules: [{ required: true, message: "请输入端口号" }]
-              })(<Input type="number" />)}
+              })(
+                <InputNumber min={1} max={65535} />
+                // <Input type="number" min={1} max={65535}
+              )}
             </FormItem>
 
-            <FormItem label="用户名">
+            <FormItem {...formItemLayout} label="用户名">
               {getFieldDecorator("userName", {
                 rules: [{ required: true, message: "请输入用户名" }]
               })(<Input />)}
             </FormItem>
 
-            <FormItem label="密码">
+            <FormItem {...formItemLayout} label="密码">
               {getFieldDecorator("password", {
                 rules: [{ required: true, message: "请输入密码" }]
               })(<Input type="password" />)}
