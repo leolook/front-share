@@ -1,47 +1,66 @@
-import React from 'react';
-import { connect } from 'dva';
-import {Layout,Menu} from 'antd';
-const {Content,Header } = Layout;
+import React from "react";
+import { connect } from "dva";
+import { Layout, Menu } from "antd";
 
- class Test  extends React.Component{
+const { Content, Header } = Layout;
 
-    render(){
-        const { dispatch } = this.props;
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      menu: [
+        { url: "/main/db", name: "工具" },
+        { url: "/main/list", name: "数据库" }
+      ],
+      currentUrl: ""
+    };
+  }
 
-        function change(item, key, keyPath){
-              dispatch({
-                type: 'main/to',
-                payload: item.key,
-              });
-        }
+  //菜单切换事件
+  onChange = (item, key, keyPath) => {
+    this.props.dispatch({
+      type: "main/to",
+      payload: item.key
+    });
+  };
 
-        return (
-            <Layout>
-                <Header>
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                    defaultSelectedKeys={['2']}
-                    style={{ lineHeight: '64px' }}
-                    onClick={change}
-                >
-                    <Menu.Item key="/main/db" >工具</Menu.Item>
-                    <Menu.Item key="/main/list">数据库</Menu.Item>
-                </Menu>
-                </Header>
-                <Content style={{marginTop:'20px',marginLeft:'20px',marginRight:'20px'}}>
-                      {this.props.children}
-                </Content>
-            </Layout>
-        );
+  render() {
+    let current = window.location.href;
+    let menu = this.state.menu;
+    for (let i = 0; i < menu.length; i++) {
+      if (current.indexOf(menu[i].url) !== -1) {
+        current = menu[i].url;
+        break;
+      }
     }
 
+    return (
+      <Layout>
+        <Header>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={[`${current}`]}
+            style={{ lineHeight: "64px" }}
+            onClick={this.onChange}
+          >
+            {this.state.menu.map(d => (
+              <Menu.Item key={d.url}>{d.name} </Menu.Item>
+            ))}
+          </Menu>
+        </Header>
+        <Content
+          style={{ marginTop: "20px", marginLeft: "20px", marginRight: "20px" }}
+        >
+          {this.props.children}
+        </Content>
+      </Layout>
+    );
+  }
 }
 
 const mapStateToProps = () => {
-    return {
-         
-    }
-   };
+  return {};
+};
 
-export default connect(mapStateToProps)(Test);
+export default connect(mapStateToProps)(Main);

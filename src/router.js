@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route, Switch, IndexRedirect } from "dva/router";
+import { Router, Route, Switch } from "dva/router";
 import Main from "./components/main";
 import List from "./components/db/list";
 import Util from "./components/db/util";
