@@ -107,6 +107,18 @@ export default {
         res = res.data;
         callback(res.model); // 返回结果
       }
+    },
+    //删除
+    *del({ payload: data, callback }, { call, put }) {
+      let res = yield call(DbService.del, data);
+      console.log(res);
+      if (callback && typeof callback === "function") {
+        if (res.code !== 0) {
+          callback(false);
+          return;
+        }
+        callback(true); // 返回结果
+      }
     }
   }
 };

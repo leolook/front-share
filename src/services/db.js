@@ -38,9 +38,20 @@ export async function connect(req) {
   });
 }
 
-//连接
+//表模型
 export async function tableModel(req) {
   return request("/tool/db/tableModel", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    },
+    body: JSON.stringify(req)
+  });
+}
+
+//删除
+export async function del(req) {
+  return request("/tool/db/del", {
     method: "post",
     headers: {
       "Content-Type": "application/json; charset=utf-8"

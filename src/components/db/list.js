@@ -2,8 +2,10 @@ import { Row, Button, Table, Popconfirm, Col } from "antd";
 import CollectionCreateForm from "./create";
 import React from "react";
 import { connect } from "dva";
+import { message } from "antd";
 
 const PageSize = 5;
+
 class List extends React.Component {
   state = {
     visible: false,
@@ -13,7 +15,53 @@ class List extends React.Component {
       title: "新建"
     },
     pagination: {},
-    sorter: {}
+    sorter: {},
+    columns: [
+      {
+        title: "名称",
+        dataIndex: "name",
+        sorter: true,
+        width: "20%"
+      },
+      {
+        title: "ip",
+        dataIndex: "ip",
+        width: "20%"
+      },
+      {
+        title: "port",
+        dataIndex: "port",
+        width: "10%"
+      },
+      {
+        title: "用户名",
+        dataIndex: "userName",
+        width: "20%"
+      },
+      {
+        title: "操作",
+        key: "action",
+        render: (text, record) => {
+          return (
+            <Row gutter={8}>
+              <Col span={5}>
+                <Button type="primary" onClick={() => this.onEdit(record.key)}>
+                  编辑
+                </Button>
+              </Col>
+              <Col span={5}>
+                <Popconfirm
+                  title="确认删除?"
+                  onConfirm={() => this.onDelete(record.key)}
+                >
+                  <Button type="primary">删除</Button>
+                </Popconfirm>
+              </Col>
+            </Row>
+          );
+        }
+      }
+    ]
   };
 
   //初始化列表数据
@@ -37,19 +85,17 @@ class List extends React.Component {
   //处理表格变化
   handleTableChange = (pagination, filters, sorter) => {
     console.log(pagination, filters, sorter);
-    if (sorter.field === "name") {
+    if (sorter.field === "name" && sorter.order !== "") {
       let obj = {
-        pageNo: pagination.current
+        pageNo: pagination.current,
+        sorter: {
+          field: sorter.field,
+          order: sorter.order
+        }
       };
       this.handlePage(obj);
-      sorter.order = "ascend";
+      this.setState({ sorter: sorter });
     }
-    this.setState({
-      sorter: {
-        field: sorter.field,
-        order: sorter.order
-      }
-    });
   };
 
   //处理分页数据
@@ -57,7 +103,7 @@ class List extends React.Component {
     this.setState({ loading: true });
     this.props.dispatch({
       type: "db/page",
-      payload: { pageNo: obj.pageNo, pageSize: PageSize },
+      payload: { pageNo: obj.pageNo, pageSize: PageSize, sorter: obj.sorter },
       callback: res => {
         // console.log(res);
         this.setState({ loading: false });
@@ -118,7 +164,27 @@ class List extends React.Component {
     this.formRef = formRef;
   };
 
-  onDelete = id => {};
+  //删除
+  onDelete = id => {
+    let value = {
+      ids: [id]
+    };
+    this.props.dispatch({
+      type: "db/del",
+      payload: value,
+      callback: res => {
+        if (res) {
+          message.success("删除成功");
+          //刷新数据
+          let obj = {
+            pageNo: this.state.pagination.current,
+            sorter: this.state.sorter
+          };
+          this.handlePage(obj);
+        }
+      }
+    });
+  };
 
   onEdit = key => {
     let v = this.state.list;
@@ -133,54 +199,6 @@ class List extends React.Component {
   };
 
   render() {
-    const columns = [
-      {
-        title: "名称",
-        dataIndex: "name",
-        sorter: true,
-        sorterOrder: this.state.field === "name" && this.state.order,
-        width: "20%"
-      },
-      {
-        title: "ip",
-        dataIndex: "ip",
-        width: "20%"
-      },
-      {
-        title: "port",
-        dataIndex: "port",
-        width: "10%"
-      },
-      {
-        title: "用户名",
-        dataIndex: "userName",
-        width: "20%"
-      },
-      {
-        title: "操作",
-        key: "action",
-        render: (text, record) => {
-          return (
-            <Row gutter={8}>
-              <Col span={5}>
-                <Button type="primary" onClick={() => this.onEdit(record.key)}>
-                  编辑
-                </Button>
-              </Col>
-              <Col span={5}>
-                <Popconfirm
-                  title="确认删除?"
-                  onConfirm={() => this.onDelete(record.key)}
-                >
-                  <Button type="primary">删除</Button>
-                </Popconfirm>
-              </Col>
-            </Row>
-          );
-        }
-      }
-    ];
-
     return (
       <div>
         <Row>
@@ -197,7 +215,7 @@ class List extends React.Component {
         </Row>
         <Row style={{ marginTop: "10px" }}>
           <Table
-            columns={columns}
+            columns={this.state.columns}
             dataSource={this.state.list}
             loading={this.state.loading}
             pagination={this.state.pagination}
