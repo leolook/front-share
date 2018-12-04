@@ -1,6 +1,8 @@
 import { Row, Button, Select, Form, Col, Input, Card } from "antd";
 import React from "react";
 import { connect } from "dva";
+import copy from "copy-to-clipboard";
+import { message } from "antd";
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -21,12 +23,15 @@ const UtilFrom = Form.create()(
       clear: {
         disabled: true
       },
+      copy: {
+        disabled: true
+      },
       db: [],
       table: {
         key: "",
         model: []
       },
-      content: "demo"
+      content: ""
     };
 
     componentDidMount = () => {
@@ -103,12 +108,23 @@ const UtilFrom = Form.create()(
       this.setState({ content: "" });
     };
 
+    //复制
+    handelCopy = () => {
+      if (this.state.content === "") {
+        message.warn("内容不能为空");
+        return;
+      }
+      copy(this.state.content);
+      message.success("复制成功");
+    };
+
     //表
     handelChange = (value, option) => {
       tableName = value;
       this.setState({
         run: { disabled: false },
-        clear: { disabled: false }
+        clear: { disabled: false },
+        copy: { disabled: false }
       });
     };
     render() {
@@ -174,20 +190,26 @@ const UtilFrom = Form.create()(
                   清除
                 </Button>
               </FormItem>
+              <FormItem>
+                <Button
+                  type="primary"
+                  disabled={this.state.copy.disabled}
+                  onClick={this.handelCopy}
+                >
+                  复制
+                </Button>
+              </FormItem>
             </Form>
           </Col>
           <Col span={2} />
           <Col span={14}>
-            <div style={{ background: "#ECECEC", padding: "30px" }}>
+            <div style={{ background: "#f0f2f5", paddingBottom: "30px" }}>
               <Card title="表模型" bordered={false} style={{ width: "auto" }}>
-                <TextArea rows={8} value={this.state.content} />
-
-                {/* <textarea
-                  style={{ border: "none" }}
-                  rows="15"
-                  cols="70"
+                <TextArea
+                  rows={8}
                   value={this.state.content}
-                /> */}
+                  style={{ background: "#ECECEC" }}
+                />
               </Card>
             </div>
           </Col>

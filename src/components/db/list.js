@@ -12,17 +12,16 @@ class List extends React.Component {
     modal: {
       title: "新建"
     },
-    pagination: {
-      onChange: (pageNo, pageSize) => {
-        console.log(pageNo, pageSize);
-        this.handlePage(pageNo);
-      }
-    }
+    pagination: {},
+    sorter: {}
   };
 
   //初始化列表数据
   componentDidMount = () => {
-    this.handlePage(1);
+    let obj = {
+      pageNo: 1
+    };
+    this.handlePage(obj);
   };
 
   showModal = () => {
@@ -35,15 +34,32 @@ class List extends React.Component {
     this.setState({ visible: false });
   };
 
+  //处理表格变化
+  handleTableChange = (pagination, filters, sorter) => {
+    console.log(pagination, filters, sorter);
+    if (sorter.field === "name") {
+      let obj = {
+        pageNo: pagination.current
+      };
+      this.handlePage(obj);
+      sorter.order = "ascend";
+    }
+    this.setState({
+      sorter: {
+        field: sorter.field,
+        order: sorter.order
+      }
+    });
+  };
+
   //处理分页数据
-  handlePage = pageNo => {
-    console.log("pageNo", pageNo);
+  handlePage = obj => {
     this.setState({ loading: true });
     this.props.dispatch({
       type: "db/page",
-      payload: { pageNo: pageNo, pageSize: PageSize },
+      payload: { pageNo: obj.pageNo, pageSize: PageSize },
       callback: res => {
-        console.log(res);
+        // console.log(res);
         this.setState({ loading: false });
         if (res) {
           this.setState({
@@ -80,13 +96,18 @@ class List extends React.Component {
           console.log(res);
           this.setState({ loading: false });
           if (res) {
+            //重置表单
             form.resetFields();
             this.setState({ visible: false });
+
+            //刷新数据
+            let obj = {
+              pageNo: this.state.pagination.current
+            };
             if (key > 0) {
-              this.handlePage(this.state.pagination.current);
-            } else {
-              this.handlePage(1);
+              obj.current = this.state.pagination.current;
             }
+            this.handlePage(obj);
           }
         }
       });
@@ -115,19 +136,25 @@ class List extends React.Component {
     const columns = [
       {
         title: "名称",
-        dataIndex: "name"
+        dataIndex: "name",
+        sorter: true,
+        sorterOrder: this.state.field === "name" && this.state.order,
+        width: "20%"
       },
       {
         title: "ip",
-        dataIndex: "ip"
+        dataIndex: "ip",
+        width: "20%"
       },
       {
         title: "port",
-        dataIndex: "port"
+        dataIndex: "port",
+        width: "10%"
       },
       {
         title: "用户名",
-        dataIndex: "userName"
+        dataIndex: "userName",
+        width: "20%"
       },
       {
         title: "操作",
@@ -174,6 +201,7 @@ class List extends React.Component {
             dataSource={this.state.list}
             loading={this.state.loading}
             pagination={this.state.pagination}
+            onChange={this.handleTableChange}
           />
         </Row>
       </div>
