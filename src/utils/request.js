@@ -32,5 +32,9 @@ export default function request(url, options) {
       }
       return data;
     })
-    .catch(err => ({ err }));
+    .catch(err => {
+      console.log(err);
+      message.error("服务器异常");
+      return err;
+    });
 }
