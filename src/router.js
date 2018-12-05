@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route, Switch } from "dva/router";
+import { Router, Route, Switch, Redirect } from "dva/router";
 import Main from "./components/main";
 import List from "./components/db/list";
 import Util from "./components/db/util";
@@ -19,9 +19,7 @@ function RouterConfig({ history }) {
     <LocaleProvider locale={zh_CN}>
       <Router history={history}>
         <Switch>
-          {/* <Route path="/" component={Inbox}>
-            <IndexRedirect to="main/list" />
-          </Route> */}
+          <Route path="/" exact render={() => <Redirect to="/main/list" />} />
           <Route path="/main" component={Inbox} />
         </Switch>
       </Router>

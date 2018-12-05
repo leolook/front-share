@@ -1,5 +1,6 @@
 import request from "../utils/request";
 
+//创建或者编辑
 export async function createOrModify(req) {
   return request("/tool/db/createOrModify", {
     method: "post",
@@ -10,6 +11,7 @@ export async function createOrModify(req) {
   });
 }
 
+//分页数据
 export async function page(req) {
   return request("/tool/db/page", {
     method: "post",
