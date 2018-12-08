@@ -2,7 +2,7 @@
   "name": "front-share",
   "private": true,
   "scripts": {
-    "start": "PORT=3000 roadhog server",
+    "start": "PORT=4000 roadhog server",
     "build": "roadhog build",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
