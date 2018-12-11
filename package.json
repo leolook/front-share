@@ -2,7 +2,7 @@
   "name": "front-share",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV='production' && PORT=4000 roadhog server",
+    "start": "NODE_ENV='production' && roadhog build --analyze && PORT=4000 roadhog server",
     "build": "NODE_ENV='production' && roadhog build --analyze && PORT=4000 roadhog server",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
