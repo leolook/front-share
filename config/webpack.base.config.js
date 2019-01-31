@@ -13,9 +13,6 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"]
   },
-  devServer: {
-    disableHostCheck: true
-  },
   module: {
     rules: [
       {

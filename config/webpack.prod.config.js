@@ -13,6 +13,19 @@ module.exports = merge(baseWebpackConfig, {
     filename: "index.js"
   },
   // mode: "production",
+  devServer: {
+    disableHostCheck: true,
+    //指定静态文件的路径
+    compress: true, //开启gzip
+    host: "172.17.199.149",
+    port: 4000,
+    proxy: {
+      "/tool": {
+        target: "http://172.17.199.149:2030",
+        changeOrigin: true
+      }
+    }
+  },
   module: {
     rules: [
       {
