@@ -10,7 +10,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = merge(baseWebpackConfig, {
   output: {
     path: path.join(process.cwd(), "dist"),
-    filename: "build.js"
+    filename: "index.js"
   },
   // mode: "production",
   module: {

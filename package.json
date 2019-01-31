@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Boilerplate for Dvajs + React + Webpack project with JSX, ES6 and decorator compilation",
   "scripts": {
-    "start": "webpack-dev-server --hot --open --port 4000 --config  config/webpack.dev.config.js",
+    "start": "webpack-dev-server --hot --open --host 0.0.0.0 --port 3000 --config  config/webpack.dev.config.js",
     "build": "webpack --config config/webpack.prod.config.js"
   },
   "keywords": [
