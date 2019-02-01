@@ -2,7 +2,6 @@ const baseWebpackConfig = require("./webpack.base.config");
 const merge = require("webpack-merge");
 
 module.exports = merge(baseWebpackConfig, {
-  // mode:"development"
   module: {
     rules: [
       {
@@ -19,7 +18,7 @@ module.exports = merge(baseWebpackConfig, {
     port: 4000,
     proxy: {
       "/tool": {
-        target: "http://172.17.199.149:2030",
+        target: "http://172.17.199.149:3030",
         changeOrigin: true
       }
     }
