@@ -1,5 +1,5 @@
 # 基础镜像
-FROM node:latest
+FROM node:9.2.1-alpine
 
 MAINTAINER hwt
 LABEL front-share 1.0.0
@@ -10,8 +10,6 @@ RUN mkdir /app/
 
 WORKDIR /app/
 COPY .  /app/
-
-RUN npm install 
 
 EXPOSE 4000
 
