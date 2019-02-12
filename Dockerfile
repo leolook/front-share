@@ -11,6 +11,7 @@ RUN mkdir /app/
 WORKDIR /app/
 COPY .  /app/
 
+RUN ["npm","update"]
 RUN ["npm","install"]
 RUN ["npm","build"]
 
