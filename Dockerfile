@@ -1,5 +1,5 @@
 # 基础镜像
-FROM node:9.2.1-alpine
+FROM node:10.15.1-alpine
 
 MAINTAINER hwt
 LABEL front-share 1.0.0
@@ -11,9 +11,8 @@ RUN mkdir /app/
 WORKDIR /app/
 COPY .  /app/
 
-RUN ["npm","update"]
-RUN ["npm","install"]
-RUN ["npm","build"]
+RUN npm install
+RUN npm build
 
 EXPOSE 4000
 
