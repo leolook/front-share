@@ -1,5 +1,5 @@
 # 基础镜像
-FROM node:9.2.1-alpine
+FROM node:latest-alpine
 
 MAINTAINER hwt
 LABEL front-share 1.0.0
