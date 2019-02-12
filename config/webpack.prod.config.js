@@ -14,7 +14,7 @@ module.exports = merge(baseWebpackConfig, {
     //指定静态文件的路径
     disableHostCheck: true,
     compress: true, //开启gzip
-    host: "172.17.199.149",
+    host: "0.0.0.0",
     port: 4000,
     proxy: {
       "/tool": {
