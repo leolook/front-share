@@ -14,7 +14,7 @@ ENV TZ Asia/Shanghai
 COPY .  /app/
 
 RUN npm config set registry http://registry.npm.taobao.org
-RUN npm install 
+RUN npm install --registry=http://registry.npm.taobao.org
 RUN npm build
 
 EXPOSE 4000
