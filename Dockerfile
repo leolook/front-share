@@ -13,7 +13,6 @@ ENV TZ Asia/Shanghai
 COPY config  /app/config
 COPY public  /app/public
 COPY src  /app/src
-COPY static  /app/static
 COPY build.js index.html package.json /app/
 
 RUN npm install
