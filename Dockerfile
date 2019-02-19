@@ -6,7 +6,7 @@ LABEL front-share 1.0.0
 
 #RUN apk update && apk add bash tzdata \
  #   && cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN mkdir /app/dist/
+RUN mkdir -p /app/dist/
 
 WORKDIR /app/
 ENV TZ Asia/Shanghai
