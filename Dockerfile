@@ -13,8 +13,6 @@ ENV TZ Asia/Shanghai
 
 COPY .  /app/
 
-RUN rm -f .git
-
 EXPOSE 4000
 
 CMD ["npm","start"]
