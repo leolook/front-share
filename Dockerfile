@@ -6,10 +6,14 @@ LABEL front-share 1.0.0
 
 #RUN apk update && apk add bash tzdata \
  #   && cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN mkdir /app/
+RUN mkdir /app/dist
 
 WORKDIR /app/
-COPY .  /app/
+COPY config  /app/config
+COPY public  /app/public
+COPY src  /app/src
+COPY static  /app/static
+COPY build.js index.html package.json /app/
 
 RUN npm install
 RUN npm build
