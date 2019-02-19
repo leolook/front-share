@@ -10,21 +10,15 @@ RUN mkdir -p /app/dist/
 
 WORKDIR /app/
 ENV TZ Asia/Shanghai
-ARG registry=https://registry.npm.taobao.org
-ARG disturl=https://npm.taobao.org/dist
-RUN yarn config set disturl $disturl
-RUN yarn config set registry $registry
 
 COPY config  /app/config
 COPY public  /app/public
 COPY src  /app/src
 COPY build.js index.html package.json /app/
 
-RUN yarn --frozen-lockfile --production
-#RUN npm install
-#RUN npm build
+RUN npm install -gd express --registry=http://registry.npm.taobao.org
+RUN npm build
 
 EXPOSE 4000
 
-#CMD ["npm","start"]
-CMD [ "yarn", "start:prod" ]
+CMD ["npm","start"]
